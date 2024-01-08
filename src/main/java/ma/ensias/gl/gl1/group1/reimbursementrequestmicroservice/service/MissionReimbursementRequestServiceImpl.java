@@ -5,10 +5,12 @@ import java.util.Optional;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import ma.ensias.gl.gl1.group1.reimbursementrequestmicroservice.domain.MissionReimbursementRequest;
 import ma.ensias.gl.gl1.group1.reimbursementrequestmicroservice.domain.MissionReimbursementRequest.State;
+import ma.ensias.gl.gl1.group1.reimbursementrequestmicroservice.event.MissionReimbursementRequestApprovedEvent;
 import ma.ensias.gl.gl1.group1.reimbursementrequestmicroservice.exception.InvalidMissionReimbursementRequestIdException;
 import ma.ensias.gl.gl1.group1.reimbursementrequestmicroservice.repository.MissionReimbursementRequestRepository;
 
@@ -20,6 +22,10 @@ public class MissionReimbursementRequestServiceImpl  implements MissionReimburse
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Value("${missionReimbursementRequestApprovedExchangeName}")
+    private String missionReimbursementRequestApprovedExchangeName;
+
 
     public MissionReimbursementRequestServiceImpl(MissionReimbursementRequestRepository missionReimbursementRequestRepository) {
         this.missionReimbursementRequestRepository = missionReimbursementRequestRepository;
@@ -50,6 +56,14 @@ public class MissionReimbursementRequestServiceImpl  implements MissionReimburse
         if(optionalMissionReimbursementRequest.isPresent()) {
             MissionReimbursementRequest missionReimbursementRequest = optionalMissionReimbursementRequest.get();
             missionReimbursementRequest.setState(State.APPROVED);
+
+            MissionReimbursementRequestApprovedEvent event = new MissionReimbursementRequestApprovedEvent(
+                missionReimbursementRequest.getId(),
+                missionReimbursementRequest.getMissionId(),
+                missionReimbursementRequest.getProfessorId()
+            );
+            this.rabbitTemplate.convertAndSend(missionReimbursementRequestApprovedExchangeName, event);
+            
             return missionReimbursementRequest;
         }
 
