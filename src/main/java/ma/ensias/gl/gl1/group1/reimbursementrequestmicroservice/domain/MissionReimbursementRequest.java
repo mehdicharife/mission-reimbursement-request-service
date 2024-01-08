@@ -7,6 +7,12 @@ import jakarta.persistence.Id;
 
 @Entity
 public class MissionReimbursementRequest {
+
+    public enum State {
+        CREATED,
+        APPROVED,
+        REJECTED
+    };
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +22,7 @@ public class MissionReimbursementRequest {
 
     private Long professorId;
 
+    private State state = State.CREATED;
 
     public Long getId() {
         return this.id;
@@ -40,6 +47,16 @@ public class MissionReimbursementRequest {
     public void setProfessorId(Long professorId) {
         this.professorId = professorId;
     }
+
+
+    public State getState() {
+        return this.state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
 
 
 }
