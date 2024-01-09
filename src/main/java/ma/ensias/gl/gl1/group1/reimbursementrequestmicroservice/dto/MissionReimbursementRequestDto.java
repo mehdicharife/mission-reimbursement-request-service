@@ -34,4 +34,12 @@ public class MissionReimbursementRequestDto {
     }
 
 
+    @Override
+    public String toString() {
+        return "{" +
+            " missionId='" + getMissionId() + "'" +
+            ", professorId='" + getProfessorId() + "'" +
+            "}";
+    }
+
 }

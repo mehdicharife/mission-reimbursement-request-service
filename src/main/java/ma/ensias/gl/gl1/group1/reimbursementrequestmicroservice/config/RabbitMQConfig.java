@@ -1,6 +1,8 @@
 package ma.ensias.gl.gl1.group1.reimbursementrequestmicroservice.config;
 
+
 import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 
 @Configuration
@@ -35,4 +38,11 @@ public class RabbitMQConfig {
         rabbitTemplate.setMessageConverter(messageConverter);
         return rabbitTemplate;
     }
+
+    @Bean
+    public RabbitAdmin rabbitAdmin(RabbitTemplate rabbitTemplate) {
+        return new RabbitAdmin(rabbitTemplate);
+    }
+
+    
 }
