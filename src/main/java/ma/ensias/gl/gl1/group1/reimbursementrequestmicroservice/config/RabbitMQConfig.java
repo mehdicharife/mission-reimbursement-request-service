@@ -39,10 +39,5 @@ public class RabbitMQConfig {
         return rabbitTemplate;
     }
 
-    @Bean
-    public RabbitAdmin rabbitAdmin(RabbitTemplate rabbitTemplate) {
-        return new RabbitAdmin(rabbitTemplate);
-    }
-
     
 }

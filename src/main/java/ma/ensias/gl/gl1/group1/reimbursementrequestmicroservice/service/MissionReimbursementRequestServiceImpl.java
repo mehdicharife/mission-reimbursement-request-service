@@ -62,7 +62,8 @@ public class MissionReimbursementRequestServiceImpl  implements MissionReimburse
                 missionReimbursementRequest.getMissionId(),
                 missionReimbursementRequest.getProfessorId()
             );
-            this.rabbitTemplate.convertAndSend(missionReimbursementRequestApprovedExchangeName, event);
+
+            this.rabbitTemplate.convertAndSend(missionReimbursementRequestApprovedExchangeName,"", event);
             
             return missionReimbursementRequest;
         }
